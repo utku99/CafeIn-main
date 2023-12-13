@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  SafeAreaView, Text, StatusBar
+  SafeAreaView, Text, StatusBar, Alert
 } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
@@ -15,18 +15,28 @@ import Adminpage from './src/screens/Adminpage';
 
 function App(): JSX.Element {
 
+  // const createTwoButtonAlert = () =>
+  // Alert.alert('Alert Title', 'My Alert Msg', [
+  //     {
+  //         text: 'Cancel',
+  //         onPress: () => console.log('Cancel Pressed'),
+  //         style: 'cancel',
+  //     },
+  //     { text: 'OK', onPress: () => console.log('OK Pressed') },
+  // ]);
+
   return (
     <Provider store={store}>
       <NavigationContainer>
         <SafeAreaView>
           <StatusBar barStyle={'light-content'} backgroundColor={"#C89E51"} />
 
-          {/* <UserRegister /> */}
+          <UserRegister />
           {/* <Login /> */}
           {/* <Home /> */}
           {/* <CafeDetail /> */}
           {/* <CafeMenu /> */}
-          <Adminpage />
+          {/* <Adminpage /> */}
 
         </SafeAreaView>
       </NavigationContainer>

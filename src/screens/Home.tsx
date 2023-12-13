@@ -3,9 +3,12 @@ import React from 'react'
 import Header from '../components/Header'
 import Restaurant from '../components/Restaurant'
 import Input from '../components/Input'
+import { useSelector } from 'react-redux'
 
 
 const Home = () => {
+    const { user } = useSelector((state: any) => state.user)
+
     return (
         <View className="bg-white h-full">
             <Header />
