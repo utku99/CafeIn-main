@@ -1,10 +1,12 @@
 import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { Rating } from 'react-native-ratings'
 
 type props = {
-    type: "input" | "button" | "heading"
+    type: "input" | "button" | "heading" | "textarea" | "rating"
     value?: any
     label?: string
+    setValue?: any
     onChangeText?: any
     placeholder?: string
     keyboardType?: any
@@ -14,7 +16,7 @@ type props = {
     theme?: "solid" | "outlined"
 }
 
-export default function Input({ type, value, label, onChangeText, placeholder, keyboardType, title, onPress, style, theme = "solid" }: props) {
+export default function Input({ type, value, setValue, label, onChangeText, placeholder, keyboardType, title, onPress, style, theme = "solid" }: props) {
     return (
         <>
             {type === "input" && (
@@ -30,6 +32,26 @@ export default function Input({ type, value, label, onChangeText, placeholder, k
                         placeholder={placeholder}
                         keyboardType={keyboardType}
                         className="bg-white rounded-lg"
+
+                    />
+                </View>
+            )}
+
+            {type === "textarea" && (
+                <View className="w-[90%] self-center mb-10 ">
+                    {
+                        label && (
+                            <Text className="text-lg text-white">{label}</Text>
+                        )
+                    }
+                    <TextInput
+                        value={value}
+                        onChangeText={onChangeText}
+                        placeholder={placeholder}
+                        keyboardType={keyboardType}
+                        className="bg-white rounded-lg min-h-[150px]"
+                        multiline
+                        textAlignVertical='top'
                     />
                 </View>
             )}
@@ -45,6 +67,14 @@ export default function Input({ type, value, label, onChangeText, placeholder, k
 
             {type === "heading" && (
                 <Text className="text-lg text-gray-700 m-2">{label}</Text>
+            )}
+
+            {type === "rating" && (
+                <Rating
+                    tintColor='#e5e7eb'
+                    startingValue={value}
+                    onFinishRating={(e: any) => setValue(e)}
+                />
             )}
         </>
     )

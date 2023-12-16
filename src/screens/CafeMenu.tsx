@@ -1,18 +1,31 @@
-import { View, Text, Image, ScrollView } from 'react-native'
+import { View, Text, Image, ScrollView, FlatList } from 'react-native'
 import React from 'react'
 import Input from '../components/Input'
+import Header from '../components/Header'
 
-const CafeMenu = () => {
+const CafeMenu = ({ route }: any) => {
+    const { menu } = route.params
+
+    console.log(menu);
+
     return (
         <View>
+            <Header />
+
             <View className="self-center">
                 <Input type='heading' label='Menü' />
             </View>
-            <ScrollView className="h-[90%]" contentContainerStyle={{ display: 'flex', flexDirection: "column", gap: 10, paddingBottom: 100 }}>
-                <Image className="w-full h-[250px]" resizeMode='cover' source={{ uri: "https://marketplace.canva.com/EADufaxbiZ4/1/0/1236w/canva-koyu-kahverengi-kupalar-kahve-d%C3%BCkkan%C4%B1-men%C3%BC-7dcYm4xingY.jpg" }} />
-                <Image className="w-full h-[250px]" resizeMode='cover' source={{ uri: "https://marketplace.canva.com/EADufaxbiZ4/1/0/1236w/canva-koyu-kahverengi-kupalar-kahve-d%C3%BCkkan%C4%B1-men%C3%BC-7dcYm4xingY.jpg" }} />
-                <Image className="w-full h-[250px]" resizeMode='cover' source={{ uri: "https://marketplace.canva.com/EADufaxbiZ4/1/0/1236w/canva-koyu-kahverengi-kupalar-kahve-d%C3%BCkkan%C4%B1-men%C3%BC-7dcYm4xingY.jpg" }} />
-            </ScrollView>
+
+            <FlatList
+                className="h-[90%]"
+                contentContainerStyle={{ display: 'flex', flexDirection: "column", gap: 10, paddingBottom: 100 }}
+                data={menu}
+                renderItem={({ item }) =>
+                    <Image className="w-full h-[250px]" resizeMode='cover' source={{ uri: item }} />
+                }
+            />
+
+
         </View>
 
 

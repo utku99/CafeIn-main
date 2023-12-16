@@ -10,20 +10,26 @@ import {
     Modal,
     StyleSheet,
     Alert,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    FlatList
 } from 'react-native'
 import { check, PERMISSIONS, RESULTS, request } from 'react-native-permissions'
 import ImagePicker from 'react-native-image-crop-picker'
+import Input from './Input'
 
 interface ImagePickerComp {
-    chat?: any
-    filePath?: any
-    setFilePath?: any
+    file?: any
+    setFile?: any
+    fileMulti?: any
+    setFileMulti?: any
+    type?: "multi" | "single"
 }
 const ImageUploader: React.FC<ImagePickerComp> = ({
-    chat,
-    filePath,
-    setFilePath
+    type,
+    file,
+    fileMulti,
+    setFile,
+    setFileMulti
 }) => {
     const [photoModal, setPhotoModal] = useState(false)
 
@@ -138,12 +144,13 @@ const ImageUploader: React.FC<ImagePickerComp> = ({
         const isWritePermitted = await requestExternalWritePermission()
         if (isCameraPermitted && isWritePermitted) {
             ImagePicker.openCamera({
-                width: 300,
-                height: 400,
-                cropping: false
+                // width: 300,
+                height: 250,
+                cropping: false,
+                includeBase64: true,
             })
                 .then((image) => {
-                    setFilePath(image.path)
+                    setFile(image)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -161,13 +168,14 @@ const ImageUploader: React.FC<ImagePickerComp> = ({
         const isReadPermitted = await requestExternalReadPermission()
         if (isReadPermitted) {
             ImagePicker.openPicker({
-                width: 300,
-                height: 400,
+                // width: 300,
+                height: 250,
+                includeBase64: true,
                 cropping: false,
-                mediaType: 'photo'
+                mediaType: 'photo',
             })
                 .then((image) => {
-                    setFilePath(image.path)
+                    setFile(image)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -181,52 +189,134 @@ const ImageUploader: React.FC<ImagePickerComp> = ({
         }
     }
 
+
+    const openGalleryMulti = async () => {
+        const isReadPermitted = await requestExternalReadPermission()
+        if (isReadPermitted) {
+            ImagePicker.openPicker({
+                // width: 300,
+                height: 250,
+                includeBase64: true,
+                cropping: false,
+                mediaType: 'photo',
+                multiple: true
+            })
+                .then((image) => {
+                    setFileMulti(image)
+                    console.log(image);
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            Alert.alert(
+                'İzin Gerekli',
+                'Galeri iznini uygulama için vermeniz gerekmektedir. Ayarlara giderek izinleri veriniz.',
+                [{ text: 'Tamam', style: 'default' }]
+            )
+        }
+    }
+
+
     return (
         <>
-            <Pressable onPress={() => setPhotoModal(!photoModal)}>
-                <Text>sd</Text>
-                <Image source={{ uri: filePath }} style={styles.image} />
-            </Pressable>
-            {photoModal && (
-                <Modal
-                    animationType="slide"
-                    transparent
-                    visible={photoModal}
-                    onRequestClose={() => setPhotoModal(!photoModal)}
-                >
-                    <TouchableWithoutFeedback onPress={() => setPhotoModal(false)}>
-                        <View style={styles.modalbackground}>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.modal}>
-                                    <TouchableOpacity
-                                        style={styles.modalbuttons}
-                                        onPress={() => {
-                                            openCamera()
-                                            setPhotoModal(!photoModal)
-                                        }}
-                                    >
-                                        <Text style={styles.text}>Kamerayı Aç</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.modalbuttons}
-                                        onPress={() => {
-                                            openGallery()
-                                            setPhotoModal(!photoModal)
-                                        }}
-                                    >
-                                        <Text style={styles.text}>Galeriyi Aç</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => setPhotoModal(!photoModal)}
-                                        style={{ position: 'absolute', right: 30, top: 20 }}
-                                    >
-                                    </TouchableOpacity>
+
+            {type == "single" && (
+                <>
+                    <Pressable onPress={() => setPhotoModal(!photoModal)} className="h-[250px] w-[90%] self-center" >
+                        <Image resizeMode='cover' className="w-full h-full" source={{ uri: file?.path ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU" }} />
+                    </Pressable >
+                    {photoModal && (
+                        <Modal
+                            animationType="slide"
+                            transparent
+                            visible={photoModal}
+                            onRequestClose={() => setPhotoModal(!photoModal)}
+                        >
+                            <TouchableWithoutFeedback onPress={() => setPhotoModal(false)}>
+                                <View style={styles.modalbackground}>
+                                    <TouchableWithoutFeedback>
+                                        <View style={styles.modal}>
+                                            <TouchableOpacity
+                                                style={styles.modalbuttons}
+                                                onPress={() => {
+                                                    openCamera()
+                                                    setPhotoModal(!photoModal)
+                                                }}
+                                            >
+                                                <Text style={styles.text}>Kamerayı Aç</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style={styles.modalbuttons}
+                                                onPress={() => {
+                                                    openGallery()
+                                                    setPhotoModal(!photoModal)
+                                                }}
+                                            >
+                                                <Text style={styles.text}>Galeriyi Aç</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => setPhotoModal(!photoModal)}
+                                                style={{ position: 'absolute', right: 30, top: 20 }}
+                                            >
+                                            </TouchableOpacity>
+                                        </View>
+                                    </TouchableWithoutFeedback>
                                 </View>
                             </TouchableWithoutFeedback>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </Modal>
+                        </Modal>
+                    )}
+                </>
+
             )}
+            {type == "multi" && (
+                <>
+                    <Input type='button' label=' Resim Seç' onPress={() => setPhotoModal(!photoModal)} />
+                    <FlatList
+                        data={fileMulti}
+                        horizontal
+                        contentContainerStyle={{ gap: 10 }}
+                        renderItem={({ item, index }) =>
+                            <Image key={index} className="w-[250px] h-[250px]" source={{ uri: item?.path }} />
+                        }
+                    />
+
+                    {photoModal && (
+                        <Modal
+                            animationType="slide"
+                            transparent
+                            visible={photoModal}
+                            onRequestClose={() => setPhotoModal(!photoModal)}
+                        >
+                            <TouchableWithoutFeedback onPress={() => setPhotoModal(false)}>
+                                <View style={styles.modalbackground}>
+                                    <TouchableWithoutFeedback>
+                                        <View style={styles.modal}>
+                                            <TouchableOpacity
+                                                style={styles.modalbuttons}
+                                                onPress={() => {
+                                                    openGalleryMulti()
+                                                    setPhotoModal(!photoModal)
+                                                }}
+                                            >
+                                                <Text style={styles.text}>Galeriyi Aç</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => setPhotoModal(!photoModal)}
+                                                style={{ position: 'absolute', right: 30, top: 20 }}
+                                            >
+                                            </TouchableOpacity>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </Modal>
+                    )}
+                </>
+
+            )}
+
+
         </>
     )
 }
@@ -268,6 +358,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'black',
-        fontSize: 16
+        fontSize: 16,
+        textAlign: "center"
     }
 })
