@@ -23,6 +23,7 @@ export default function Login({ navigation }: any) {
                 "email": values.email,
                 "password": values.password,
             }).then(res => {
+                ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
                 dispatch(setUser(res.data))
             })
         }
