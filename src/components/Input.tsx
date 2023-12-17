@@ -73,7 +73,7 @@ export default function Input({ type, value, setValue, label, onChangeText, plac
                 <Rating
                     tintColor='#e5e7eb'
                     startingValue={value}
-                    onFinishRating={(e: any) => setValue(e)}
+                    onFinishRating={onPress}
                 />
             )}
         </>

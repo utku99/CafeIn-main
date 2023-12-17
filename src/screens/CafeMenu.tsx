@@ -6,7 +6,6 @@ import Header from '../components/Header'
 const CafeMenu = ({ route }: any) => {
     const { menu } = route.params
 
-    console.log(menu);
 
     return (
         <View>

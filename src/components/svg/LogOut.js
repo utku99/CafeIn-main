@@ -1,27 +1,31 @@
-import React from "react";
+import * as React from "react"
+import Svg, { Path } from "react-native-svg"
 
-function Icon() {
+function SvgComponent(props) {
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+        <Svg
+            width={24}
+            height={24}
             viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
         >
-            <path
-                fill="none"
+            <Path
+                transform="matrix(.91 0 0 .91 12 12) translate(-12 -12)"
+                d="M14.5 4.707V1h-13v22h13v-3.293M6.5 12h16m-6-6l6 6-6 6"
+                strokeLinecap="butt"
                 stroke="#000"
+                strokeWidth={2}
+                strokeDasharray="none"
+                strokeDashoffset={0}
                 strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1-9h6V1M.333 7H11M7 3l4 4-4 4m-9 0l-9-2V-9l9-2v22z"
-                transform="matrix(.83 0 0 .83 12 12)"
-            ></path>
-            <circle
-                r="1.25"
-                transform="matrix(.83 0 0 .83 12 12) translate(-5.75)"
-            ></circle>
-        </svg>
-    );
+                strokeMiterlimit={4}
+                fill="none"
+                fillRule="nonzero"
+                opacity={1}
+            />
+        </Svg>
+    )
 }
 
-export default Icon;
+export default SvgComponent

@@ -1,14 +1,16 @@
-import { View, Text, ScrollView, Image } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, ScrollView, Image, ToastAndroid } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Input from '../components/Input'
 import Map from '../components/Map'
 import Header from '../components/Header'
+import axios from 'axios'
+import { baseUrl } from '../Constants'
+import { useSelector } from 'react-redux'
 
 const CafeDetail = ({ route }: any) => {
     const [rating, setRating] = useState(0)
     const { item } = route.params;
-
-    console.log(item?.title);
+    const { user } = useSelector((state: any) => state.user)
 
 
     return (
@@ -30,7 +32,17 @@ const CafeDetail = ({ route }: any) => {
                 <Map latitude={Number(item?.latitude)} longitude={Number(item?.longitude)} />
 
                 <Input type='heading' label='Cafeye Puan Ver' />
-                <Input type='rating' value={rating} setValue={setRating} />
+                <Input type='rating' value={rating} onPress={(e: any) => {
+                    console.log(e);
+
+                    axios.post(`${baseUrl}/company/rate`, {
+                        "companyId": item?.companyId,
+                        "userId": user?.userId,
+                        "rating": e
+                    }).then((res: any) => {
+                        ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
+                    })
+                }} />
 
 
             </ScrollView >

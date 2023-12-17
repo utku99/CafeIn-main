@@ -15,7 +15,7 @@ const Restaurant = ({ item }: any) => {
             <TouchableOpacity onPress={() => navigation.navigate("cafemenu", { menu: item?.menu })} className="h-full flex-1 justify-between ">
                 <Text className="text-black text-base font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{item?.title}</Text>
                 <Text className="text-black text-sm">{item?.address}</Text>
-                <Text className="text-black text-xs">25-35dk / 0.7km</Text>
+                <Text className="text-black text-xs">{item?.distance} km</Text>
             </TouchableOpacity>
 
 
@@ -24,7 +24,7 @@ const Restaurant = ({ item }: any) => {
             </TouchableOpacity>
 
             <View className="absolute right-0 -top-2 flex-row justify-center space-x-2 rounded-md bg-green-500 px-3 items-center ">
-                <Text className="text-white ">{item?.rank}</Text>
+                <Text className="text-white ">{item?.averageRating}</Text>
                 <Text className="text-yellow-300 text-lg -mt-1">★</Text>
             </View>
 

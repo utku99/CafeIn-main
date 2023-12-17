@@ -44,9 +44,6 @@ const CompanyStack = () => {
 const Route = () => {
     const { user } = useSelector((state: any) => state.user)
 
-    console.log(user);
-
-
     if (user) {
         if (user.userroleId == "1") {
             return <UserStack />

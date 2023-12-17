@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, ImageBackground, Alert } from 'react-native';
+import { View, Text, ImageBackground, Alert, ToastAndroid } from 'react-native';
 import Input from '../../components/Input';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -26,14 +26,14 @@ export default function UserRegister({ navigation }: any) {
                     "email": values.email,
                     "password": values.password,
                     "userroleid": activeTab.toString()
-                }).then(res => {
+                }).then((res: any) => {
                     if (res.data.code === 100) {
-                        console.log(res.data);
                         navigation.navigate("login")
+                    } else {
+                        ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
                     }
                 })
             )
-
         }
     })
 
@@ -49,7 +49,7 @@ export default function UserRegister({ navigation }: any) {
                 <Input type='input' label='E Posta' value={formik.values.email} onChangeText={formik.handleChange("email")} />
                 <Input type='input' label='Şifre' value={formik.values.password} onChangeText={formik.handleChange("password")} />
                 <View className="flex-row justify-center gap-6">
-                    <Input type='button' theme={activeTab == 1 ? "solid" : "outlined"} label="Normal Üye Ol" onPress={() => { setActiveTab(1), formik.handleReset }} />
+                    <Input type='button' theme={activeTab == 1 ? "solid" : "outlined"} label="Üye Ol" onPress={() => { setActiveTab(1), formik.handleReset }} />
                     <Input type='button' theme={activeTab == 2 ? "solid" : "outlined"} label="Kurum Üye Ol" onPress={() => { setActiveTab(2), formik.resetForm() }} />
                 </View>
                 <Input type='button' label="Üye Ol" onPress={formik.handleSubmit} />

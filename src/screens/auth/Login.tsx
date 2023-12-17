@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, ImageBackground } from 'react-native';
+import { View, Text, ImageBackground, ToastAndroid } from 'react-native';
 import Input from '../../components/Input';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -36,7 +36,7 @@ export default function Login({ navigation }: any) {
                 <Input type='input' label='E Posta' value={formik.values.email} onChangeText={formik.handleChange("email")} />
                 <Input type='input' label='Şifre' value={formik.values.password} onChangeText={formik.handleChange("password")} />
                 <View className="flex-row gap-4 self-center">
-                    <Input type='button' label="User Giriş Yap" theme={tab === 1 ? "solid" : "outlined"} onPress={() => setTab(1)} />
+                    <Input type='button' label="Giriş Yap" theme={tab === 1 ? "solid" : "outlined"} onPress={() => setTab(1)} />
                     <Input type='button' label="Kafe Giriş Yap" theme={tab === 1 ? "outlined" : "solid"} onPress={() => setTab(2)} />
                 </View>
                 <Input type='button' label="Gir" onPress={formik.handleSubmit} />
