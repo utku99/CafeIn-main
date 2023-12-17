@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import HamburgerMenu from './svg/HamburgerMenu'
 import Back from './svg/Back'
+import LogOut from './svg/LogOut'
 import UserMenu from './UserMenu'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
@@ -19,7 +20,7 @@ const Header = () => {
             </TouchableOpacity>
             <Text className="text-2xl">Cafe In</Text>
             <TouchableOpacity onPress={() => dispatch(setUser(null))}>
-                <HamburgerMenu />
+                <LogOut />
             </TouchableOpacity>
 
             {visible && <UserMenu setVisible={setVisible} visible={visible} />}

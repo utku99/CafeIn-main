@@ -1,0 +1,1 @@
+export const baseUrl = "https://server-qgs8.vercel.app"

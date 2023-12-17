@@ -7,6 +7,7 @@ import axios from 'axios'
 import { useFormik } from 'formik'
 import { useSelector } from 'react-redux'
 import Header from '../components/Header'
+import { baseUrl } from '../Constants'
 
 const Adminpage = () => {
     const [file, setFile] = useState<any>()
@@ -24,7 +25,7 @@ const Adminpage = () => {
         },
         onSubmit: (values) => {
 
-            axios.post("http://192.168.1.102:3000/detail/new", {
+            axios.post(`${baseUrl}/detail/new`, {
                 "companyId": user.companyId,
                 "title": values.title,
                 "logo": file.path,

@@ -3,6 +3,7 @@ import { View, Text, ImageBackground, Alert } from 'react-native';
 import Input from '../../components/Input';
 import { useFormik } from 'formik';
 import axios from 'axios';
+import { baseUrl } from '../../Constants';
 
 export default function UserRegister({ navigation }: any) {
     const [activeTab, setActiveTab] = useState(1)
@@ -18,7 +19,7 @@ export default function UserRegister({ navigation }: any) {
         onSubmit: (values) => {
 
             values.name !== "" && (
-                axios.post(`http://192.168.1.102:3000/auth/${activeTab == 1 ? "userregister" : "companyregister"}`, {
+                axios.post(`${baseUrl}/auth/${activeTab == 1 ? "userregister" : "companyregister"}`, {
                     "name": values.name,
                     "surname": values.surname,
                     "phone": values.phone,

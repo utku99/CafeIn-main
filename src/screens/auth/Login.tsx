@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/slices/user';
+import { baseUrl } from "../../Constants"
 
 
 
@@ -18,7 +19,7 @@ export default function Login({ navigation }: any) {
             password: ""
         },
         onSubmit: (values) => {
-            axios.post(`http://192.168.1.102:3000/auth/${tab === 1 ? "userlogin" : "companylogin"}`, {
+            axios.post(`${baseUrl}/auth/${tab === 1 ? "userlogin" : "companylogin"}`, {
                 "email": values.email,
                 "password": values.password,
             }).then(res => {

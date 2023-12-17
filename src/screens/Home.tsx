@@ -6,6 +6,7 @@ import Input from '../components/Input'
 import { useSelector } from 'react-redux'
 import QrScanner from '../components/QrScanner'
 import axios from 'axios'
+import { baseUrl } from '../Constants'
 
 
 const Home = () => {
@@ -14,7 +15,7 @@ const Home = () => {
     const [companies, setCompanies] = useState<any>([])
 
     useEffect(() => {
-        axios.post("http://192.168.1.102:3000/detail/getall").then(res => {
+        axios.post(`${baseUrl}/detail/getall`).then(res => {
             setCompanies(res.data)
         })
     }, [])
