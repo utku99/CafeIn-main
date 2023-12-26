@@ -8,12 +8,21 @@ const Map = ({ latitude = 0, longitude = 0 }: any) => {
             <MapView
                 className="w-full h-full"
                 provider={PROVIDER_GOOGLE}
+                // showsUserLocation
+                // followsUserLocation
                 initialRegion={{
                     latitude,
                     longitude,
                     latitudeDelta: 0.009,
                     longitudeDelta: 0.009,
-                }}>
+                }}
+                region={{
+                    latitude,
+                    longitude,
+                    latitudeDelta: 0.009,
+                    longitudeDelta: 0.009,
+                }}
+            >
                 <Marker coordinate={{ latitude, longitude }} />
 
             </MapView>

@@ -1,14 +1,15 @@
 import { View, Text, ScrollView, Image, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Input from '../components/Input'
-import Map from '../components/Map'
-import Header from '../components/Header'
+import Input from '../../components/Input'
+import Map from '../../components/Map'
+import Header from '../../components/Header'
 import axios from 'axios'
-import { baseUrl } from '../Constants'
+import { baseUrl } from '../../Constants'
 import { useSelector } from 'react-redux'
 
-const CafeDetail = ({ route }: any) => {
+const CafeDetail = ({ route, setClicked }: any) => {
     const [rating, setRating] = useState(0)
+    const [comment, setComment] = useState("")
     const { item } = route.params;
     const { user } = useSelector((state: any) => state.user)
 
@@ -33,8 +34,6 @@ const CafeDetail = ({ route }: any) => {
 
                 <Input type='heading' label='Cafeye Puan Ver' />
                 <Input type='rating' value={rating} onPress={(e: any) => {
-                    console.log(e);
-
                     axios.post(`${baseUrl}/company/rate`, {
                         "companyId": item?.companyId,
                         "userId": user?.userId,
@@ -43,6 +42,22 @@ const CafeDetail = ({ route }: any) => {
                         ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
                     })
                 }} />
+
+                <View className="border border-gray-400 border-dashed mt-4">
+                    <Input type='heading' label='Yorum Yaz' />
+                    <Input type='textarea' onChangeText={(e: any) => setComment(e)} />
+                    <Input type='button' label='Yorumu Gönder' onPress={() => {
+                        axios.post(`${baseUrl}/comment/new`, {
+                            "companyId": item?.companyId,
+                            "userName": user?.name + " " + user?.surname,
+                            "companyName": item?.title,
+                            "comment": comment
+                        }).then((res: any) => {
+                            setComment("")
+                            ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
+                        })
+                    }} />
+                </View>
 
 
             </ScrollView >

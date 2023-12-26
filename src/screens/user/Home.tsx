@@ -1,12 +1,12 @@
 import { View, Text, ScrollView, FlatList, PermissionsAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Header from '../components/Header'
-import Restaurant from '../components/Restaurant'
-import Input from '../components/Input'
+import Header from '../../components/Header'
+import Restaurant from '../../components/Restaurant'
+import Input from '../../components/Input'
 import { useSelector } from 'react-redux'
-import QrScanner from '../components/QrScanner'
+import QrScanner from '../../components/QrScanner'
 import axios from 'axios'
-import { baseUrl } from '../Constants'
+import { baseUrl } from '../../Constants'
 import Geolocation from 'react-native-geolocation-service';
 
 
@@ -101,6 +101,7 @@ const Home = () => {
     }
 
     const nearbyRestaurants = listRestaurants(Number(location?.latitude), Number(location?.longitude), companies);
+
 
 
     return (

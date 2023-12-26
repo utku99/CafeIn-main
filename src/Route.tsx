@@ -2,11 +2,14 @@ import React from 'react'
 import UserRegister from './screens/auth/UserRegister'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './screens/auth/Login';
-import Home from './screens/Home';
-import CafeDetail from './screens/CafeDetail';
-import CafeMenu from './screens/CafeMenu';
-import Adminpage from './screens/Adminpage';
+import Home from './screens/user/Home';
+import CafeDetail from './screens/user/CafeDetail';
+import CafeMenu from './screens/user/CafeMenu';
 import { useSelector } from 'react-redux';
+import CompanyOrders from './screens/company/CompanyOrders';
+import AdminDetail from './screens/company/AdminDetail';
+import AdminHome from './screens/company/AdminHome';
+import UserOrders from './screens/user/UserOrders';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +29,7 @@ const UserStack = () => {
             <Stack.Screen name='home' component={Home} />
             <Stack.Screen name='detail' component={CafeDetail} />
             <Stack.Screen name='cafemenu' component={CafeMenu} />
+            <Stack.Screen name='userorders' component={UserOrders} />
         </Stack.Navigator>
     )
 }
@@ -33,7 +37,9 @@ const UserStack = () => {
 const CompanyStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name='admin' component={Adminpage} />
+            <Stack.Screen name='adminhome' component={AdminHome} />
+            <Stack.Screen name='admin' component={AdminDetail} />
+            <Stack.Screen name='orders' component={CompanyOrders} />
         </Stack.Navigator>
     )
 }
