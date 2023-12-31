@@ -39,11 +39,19 @@ const UserOrders = () => {
                 contentContainerStyle={{ display: "flex", gap: 4 }}
                 className=" mb-10"
                 data={myOrders}
-                renderItem={({ item }) =>
-                    <View key={item?._id}>
-                        <Input type='heading' label={item?.status} />
-                        <MyOrders key={item?._id} item={item} setClicked={setClicked} />
-                    </View>
+                renderItem={({ item }) => {
+                    if (item.status == "bekliyor" || item.status == "hazırlanıyor" || item.status == "güncellendi") {
+                        return (
+                            <View key={item?._id}>
+                                <Input type='heading' label={item?.status} />
+                                <MyOrders key={item?._id} item={item} setClicked={setClicked} />
+                            </View>
+                        );
+                    } else {
+                        return <View key={item?._id}></View>
+                    }
+                }
+
                 }
             />
         </View>

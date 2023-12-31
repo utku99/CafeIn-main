@@ -1,11 +1,10 @@
-import { View, Text, Image, TouchableOpacity, Pressable } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import GoDetail from "../components/svg/GoDetail"
 import { useNavigation } from '@react-navigation/native'
 
 const Restaurant = ({ item }: any) => {
     const navigation = useNavigation()
-
 
     return (
         <View className="w-[90%]  h-[85px]  bg-white rounded-lg self-center p-2 flex-row items-center space-x-3 relative">

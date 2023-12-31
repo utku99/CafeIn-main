@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, FlatList } from 'react-native'
+import { View, Text, ScrollView, FlatList, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ImageUploader from '../../components/ImageUploader'
 import Input from '../../components/Input'
@@ -12,43 +12,72 @@ import Map from '../../components/Map'
 import MenuCard from '../../components/MenuCard'
 
 const AdminDetail = () => {
-    const [file, setFile] = useState<any>()
-    const [fileMulti, setFileMulti] = useState<any>([])
     const [location, setLocation] = useState<any>()
     const { user } = useSelector((state: any) => state.user)
 
     const [title, setTitle] = useState()
     const [content, setContent] = useState()
     const [price, setPrice] = useState()
-    const [menu, setMenu] = useState([])
+    const [detail, setDetail] = useState<any>(null)
+
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
-            description: "",
-            title: "",
-            address: "",
-            capacity: "",
+            description: detail?.description ?? "",
+            title: detail?.title ?? "",
+            address: detail?.address ?? "",
+            capacity: detail?.capacity ?? "",
+            latitude: location?.latitude ?? Number(detail?.latitude),
+            longitude: location?.longitude ?? Number(detail?.longitude),
+            logo: detail?.logo ?? null,
+            menu: detail?.menu[0]?.menu ?? []
         },
         onSubmit: (values) => {
 
-
-            axios.post(`${baseUrl}/detail/new`, {
-                "companyId": user.companyId,
-                "title": values.title,
-                "logo": file.path,
-                "description": values.description,
-                "address": values.address,
-                "latitude": location.latitude,
-                "longitude": location.longitude,
-                "capacity": values.capacity,
-                "menu": [{ "companyId": user?.companyId, "menu": menu }]
-            }).then(res => {
-                console.log(res.data);
-            })
-
-
+            if (detail) {
+                axios.post(`${baseUrl}/detail/set`, {
+                    "companyId": user.companyId,
+                    "title": values.title,
+                    "logo": values.logo,
+                    "description": values.description,
+                    "address": values.address,
+                    "latitude": values.latitude,
+                    "longitude": values.longitude,
+                    "capacity": values.capacity,
+                    "menu": [{ "companyId": user?.companyId, "menu": values.menu }]
+                }).then(res => {
+                    ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
+                    console.log(res.data);
+                })
+            } else {
+                axios.post(`${baseUrl}/detail/new`, {
+                    "companyId": user.companyId,
+                    "title": values.title,
+                    "logo": values.logo,
+                    "description": values.description,
+                    "address": values.address,
+                    "latitude": values.latitude,
+                    "longitude": values.longitude,
+                    "capacity": values.capacity,
+                    "menu": [{ "companyId": user?.companyId, "menu": values.menu }]
+                }).then(res => {
+                    ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
+                    console.log(res.data);
+                })
+            }
         }
     })
+
+
+    useEffect(() => {
+        axios.post(`${baseUrl}/detail/get`, {
+            "companyId": user.companyId,
+        }).then(res => {
+            setDetail(res.data);
+            formik.setFieldValue("menu", detail?.menu[0]?.menu)
+        })
+    }, [])
 
 
     return (
@@ -57,29 +86,30 @@ const AdminDetail = () => {
             <ScrollView className="px-3" contentContainerStyle={{ paddingBottom: 30 }}>
 
                 <Input type='heading' label='Kafe İsmi' />
-                <Input type='input' onChangeText={(e: any) => formik.setFieldValue("title", e)} />
+                <Input type='input' value={formik.values.title} onChangeText={(e: any) => formik.setFieldValue("title", e)} />
 
                 <Input type='heading' label='Logo' />
-                <ImageUploader file={file} setFile={setFile} type='single' />
+                <ImageUploader file={formik.values.logo} setFile={(e: any) => formik.setFieldValue("logo", e.path)} type='single' />
 
                 <Input type='heading' label='Açıklama' />
-                <Input type='textarea' onChangeText={(e: any) => formik.setFieldValue("description", e)} />
+                <Input type='textarea' value={formik.values.description} onChangeText={(e: any) => formik.setFieldValue("description", e)} />
 
                 <Input type='heading' label='Açık Adres' />
-                <Input type='input' onChangeText={(e: any) => formik.setFieldValue("address", e)} />
+                <Input type='input' value={formik.values.address} onChangeText={(e: any) => formik.setFieldValue("address", e)} />
 
                 <Input type='heading' label='Lokasyon' />
                 <View className="flex-row items-center justify-between mx-4">
                     <View>
-                        <Text>Enlem: {location?.latitude}</Text>
-                        <Text>Boylam: {location?.longitude}</Text>
+                        <Text>Enlem: {formik.values.latitude}</Text>
+                        <Text>Boylam: {formik.values.longitude}</Text>
                     </View>
                     <GetLocation setLocation={setLocation} />
                 </View>
-                <Map latitude={location?.latitude} longitude={location?.longitude} />
+
+                <Map latitude={formik.values.latitude} longitude={formik.values.longitude} />
 
                 <Input type='heading' label='Toplam Masa Sayısı' />
-                <Input type='input' keyboardType={"number-pad"} onChangeText={(e: any) => formik.setFieldValue("capacity", e)} />
+                <Input type='input' keyboardType={"number-pad"} value={formik.values.capacity} onChangeText={(e: any) => formik.setFieldValue("capacity", e)} />
 
                 {/* <Input type='heading' label='Menü Resimleri' />
                 <ImageUploader fileMulti={fileMulti} setFileMulti={setFileMulti} type='multi' /> */}
@@ -93,15 +123,21 @@ const AdminDetail = () => {
                         <Input type='button'
                             label='Listeye Ekle'
                             onPress={() => {
-                                setMenu((prev) => [...prev, { id: (menu.length + 1).toString(), title, content, price }])
+                                formik.setFieldValue("menu", [...formik.values.menu, { id: (formik.values.menu.length + 1).toString(), title, content, price }])
                             }}
                         />
                     </View>
 
                     <FlatList
                         contentContainerStyle={{ display: "flex", gap: 4 }}
-                        data={menu}
-                        renderItem={({ item }) => <MenuCard item={item} showadd={false} />}
+                        data={formik.values.menu}
+                        renderItem={({ item }) =>
+                            <MenuCard key={item?._id} item={item} showadd={false} remove={detail ? true : false}
+                                onPress={() => {
+                                    let temp = formik.values.menu
+                                    let temp2 = temp.filter((tmp: any) => tmp._id !== item._id)
+                                    formik.setFieldValue("menu", temp2)
+                                }} />}
                     />
                 </View>
 

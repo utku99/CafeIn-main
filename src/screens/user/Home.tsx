@@ -11,7 +11,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 
 const Home = () => {
-    const { user } = useSelector((state: any) => state.user)
+    const { user, clicked } = useSelector((state: any) => state.user)
     const [visible, setVisible] = useState(false)
     const [companies, setCompanies] = useState<any>([])
     const [location, setLocation] = useState<any>(null)
@@ -62,7 +62,7 @@ const Home = () => {
             })
         }
         getLocation()
-    }, [])
+    }, [clicked])
 
 
     function haversine(lat1: number, lon1: number, lat2: number, lon2: Number) {
@@ -103,7 +103,6 @@ const Home = () => {
     const nearbyRestaurants = listRestaurants(Number(location?.latitude), Number(location?.longitude), companies);
 
 
-
     return (
         <View className="bg-white h-full">
             <Header />
@@ -123,7 +122,7 @@ const Home = () => {
                         className="bg-gray-200 rounded-t-2xl "
                         contentContainerStyle={{ gap: 15, paddingVertical: 20 }}
                         data={nearbyRestaurants}
-                        renderItem={({ item }) => <Restaurant item={item} />}
+                        renderItem={({ item, index }) => <Restaurant key={index} item={item} />}
                         keyExtractor={(item) => item.companyId}
                     />
             }

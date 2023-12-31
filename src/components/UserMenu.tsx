@@ -1,13 +1,13 @@
 import { View, Text, TouchableWithoutFeedback, Modal } from 'react-native'
 import React from 'react'
-import { setUser } from '../redux/slices/user'
+import { setNotification, setUser } from '../redux/slices/user'
 import { clearOrder } from '../redux/slices/order'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
 const UserMenu = ({ setVisible, visible }: any) => {
     const dispatch = useDispatch()
-    const { user } = useSelector((state: any) => state.user)
+    const { user, notification } = useSelector((state: any) => state.user)
     const navigation = useNavigation()
 
     return (
@@ -19,10 +19,15 @@ const UserMenu = ({ setVisible, visible }: any) => {
 
                     )
                 }
-                <Text className="text-xl font-bold">Bildirimler</Text>
-                <Text onPress={() => { dispatch(setUser(null)); dispatch(clearOrder([])) }} className="text-xl font-bold">Çıkış Yap</Text>
+                <Text onPress={() => {
+                    navigation.navigate("notifications")
+                }} className="text-xl font-bold relative">
+                    Bildirimler - {notification}
+                </Text>
+
+                <Text onPress={() => { dispatch(setUser(null)); dispatch(clearOrder([])); dispatch(setNotification(0)) }} className="text-xl font-bold">Çıkış Yap</Text>
             </View>
-        </Modal>
+        </Modal >
     )
 }
 

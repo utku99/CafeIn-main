@@ -7,7 +7,7 @@ import Input from '../../components/Input'
 import IncomingOrdersCard from '../../components/IncomingOrdersCard'
 import Header from '../../components/Header'
 
-const CompanyOrders = () => {
+const OtherOrders = () => {
     const { user } = useSelector((state: any) => state.user)
     const [orders, setOrders] = useState()
     const [clicked, setClicked] = useState(false)
@@ -32,22 +32,23 @@ const CompanyOrders = () => {
     }, [clicked]);
 
 
+
     return (
         <View>
             <Header />
 
             <View className="items-center ">
-                <Input type='heading' label='Gelen Siparişler' />
+                <Input type='heading' label='Biten Siparişler' />
             </View>
             <FlatList
                 contentContainerStyle={{ display: "flex", gap: 4, paddingBottom: 150 }}
                 data={orders}
                 renderItem={({ item }) => {
-                    if (item.status == "hazırlanıyor" || item.status == "bekliyor" || item.status == "güncellendi") {
+                    if (item.status == "tamamlandı" || item.status == "iptal edildi") {
                         return (
                             <View key={item?._id}>
                                 <View className="flex-row">
-                                    <Input type='heading' label={item?.fullName + " -"} />
+                                    <Input type='heading' label={item?.userId} />
                                     <Input type='heading' label={item?.status} />
                                 </View>
                                 <IncomingOrdersCard item={item} setClicked={setClicked} />
@@ -63,4 +64,4 @@ const CompanyOrders = () => {
     )
 }
 
-export default CompanyOrders
+export default OtherOrders

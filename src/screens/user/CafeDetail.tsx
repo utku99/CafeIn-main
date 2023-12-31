@@ -5,13 +5,24 @@ import Map from '../../components/Map'
 import Header from '../../components/Header'
 import axios from 'axios'
 import { baseUrl } from '../../Constants'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setClicked } from '../../redux/slices/user'
 
-const CafeDetail = ({ route, setClicked }: any) => {
+const CafeDetail = ({ route }: any) => {
     const [rating, setRating] = useState(0)
     const [comment, setComment] = useState("")
     const { item } = route.params;
     const { user } = useSelector((state: any) => state.user)
+    const [count, setCount] = useState(0)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        axios.post(`${baseUrl}/detail/emptycount`, {
+            "companyId": item?.companyId
+        }).then(res => {
+            setCount(res.data)
+        })
+    }, [])
 
 
     return (
@@ -26,7 +37,7 @@ const CafeDetail = ({ route, setClicked }: any) => {
                 <View className="flex-row items-center">
                     <Input type='heading' label='Boş Masa Sayısı' />
                     <Text>:</Text>
-                    <Text className="mx-2 text-lg text-red-400">6</Text>
+                    <Text className="mx-2 text-lg text-red-400">{count}</Text>
                 </View>
 
                 <Input type='heading' label='Konum' />
@@ -39,6 +50,7 @@ const CafeDetail = ({ route, setClicked }: any) => {
                         "userId": user?.userId,
                         "rating": e
                     }).then((res: any) => {
+                        dispatch(setClicked(true))
                         ToastAndroid.show(res.data.msg, ToastAndroid.TOP)
                     })
                 }} />

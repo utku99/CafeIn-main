@@ -12,6 +12,7 @@ const AdminHome = ({ navigation }: any) => {
 
                 <Input type='button' label='Bilgilerim' onPress={() => navigation.navigate("admin")} />
                 <Input type='button' label='Gelen Siparişler' onPress={() => navigation.navigate("orders")} />
+                <Input type='button' label='Diğer Siparişler' onPress={() => navigation.navigate("otherorders")} />
             </ImageBackground>
         </>
 

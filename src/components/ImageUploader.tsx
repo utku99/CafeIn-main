@@ -224,7 +224,7 @@ const ImageUploader: React.FC<ImagePickerComp> = ({
             {type == "single" && (
                 <>
                     <Pressable onPress={() => setPhotoModal(!photoModal)} className="h-[250px] w-[90%] self-center" >
-                        <Image resizeMode='cover' className="w-full h-full" source={{ uri: file?.path ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU" }} />
+                        <Image resizeMode='cover' className="w-full h-full" source={{ uri: (file?.path || file) ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU" }} />
                     </Pressable >
                     {photoModal && (
                         <Modal

@@ -1,19 +1,22 @@
-import { View, Text, Image, ScrollView, FlatList, ToastAndroid, Pressable } from 'react-native'
+import { View, Text, Image, ScrollView, FlatList, ToastAndroid, Pressable, Modal, TouchableWithoutFeedback, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Input from '../../components/Input'
 import Header from '../../components/Header'
 import MenuCard from '../../components/MenuCard'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { baseUrl } from '../../Constants'
 import axios from 'axios'
 import Commentcomp from '../../components/Commentcomp'
+import { clearOrder } from '../../redux/slices/order'
 
 const CafeMenu = ({ route }: any) => {
     const { menu } = route.params
     const { order } = useSelector((state: any) => state.order)
     const { user } = useSelector((state: any) => state.user)
+    const dispatch = useDispatch()
     const [activeTab, setActiveTab] = useState(1)
     const [companyComments, setCompanyComments] = useState([])
+    const [orderModal, setOrderModal] = useState(false)
 
     const total = () => {
         let total = 0
@@ -62,7 +65,7 @@ const CafeMenu = ({ route }: any) => {
                         contentContainerStyle={{ display: "flex", gap: 4 }}
                         className=" mb-10"
                         data={menu[0].menu}
-                        renderItem={({ item }) => <MenuCard item={item} showadd={true} />}
+                        renderItem={({ item }) => <MenuCard key={item?._id} item={item} showadd={true} />}
                     />
 
                     {
@@ -75,21 +78,45 @@ const CafeMenu = ({ route }: any) => {
                         )
                     }
 
-
-                    <Input type='button' label='Siparişi Ver' onPress={() => {
-                        axios.post(`${baseUrl}/order/new`, {
-                            "userId": user?.userId,
-                            "companyId": menu[0]?.companyId,
-                            "orders": order.map((item: any) => ({
-                                id: item.id,
-                                title: item.title,
-                                content: item.content,
-                                price: item.price,
-                            }))
-                        }).then((res: any) => {
-                            ToastAndroid.show(res?.data?.msg, ToastAndroid.TOP)
-                        })
-                    }} />
+                    {
+                        order.length !== 0 &&
+                        <Input type='button' label='Siparişi Ver' onPress={() => { setOrderModal(true) }} />
+                    }
+                    <Modal
+                        animationType="slide"
+                        transparent
+                        visible={orderModal}
+                        onRequestClose={() => setOrderModal(!orderModal)}
+                    >
+                        <TouchableWithoutFeedback onPress={() => setOrderModal(false)}>
+                            <View className="flex-1 justify-end bg-black/[.5]">
+                                <TouchableWithoutFeedback>
+                                    <View className="rounded-t-xl bg-blue-400 p-4">
+                                        <Input type='input' label='Kart üzerindeki isim soyisim' />
+                                        <Input type='input' label='Kart numarası' />
+                                        <Input type='input' label='CVD' />
+                                        <Input type='button' label='Ödemeyi Tamala' onPress={() => {
+                                            axios.post(`${baseUrl}/order/new`, {
+                                                "userId": user?.userId,
+                                                "fullName": user?.name + " " + user?.surname,
+                                                "companyId": menu[0]?.companyId,
+                                                "orders": order.map((item: any) => ({
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    content: item.content,
+                                                    price: item.price,
+                                                }))
+                                            }).then((res: any) => {
+                                                setOrderModal(false)
+                                                dispatch(clearOrder([]))
+                                                ToastAndroid.show(res?.data?.msg, ToastAndroid.TOP)
+                                            })
+                                        }} />
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
                 </>
             ) : (
                 <FlatList
@@ -110,3 +137,4 @@ const CafeMenu = ({ route }: any) => {
 }
 
 export default CafeMenu
+
